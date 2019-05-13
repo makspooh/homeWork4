@@ -1,19 +1,19 @@
-// task 1
-let xhr1 = new XMLHttpRequest();
+// // task 1
+// let xhr1 = new XMLHttpRequest();
 
-xhr1.open('GET', 'https://tanuhaua.github.io/datas-file-json/data.json', true);
+// xhr1.open('GET', 'https://tanuhaua.github.io/datas-file-json/data.json', true);
 
-xhr1.send();
+// xhr1.send();
 
-xhr1.onreadystatechange = function() {
-  if (xhr1.readyState != 4) return;
+// xhr1.onreadystatechange = function() {
+//   if (xhr1.readyState != 4) return;
 
-  if (xhr1.status != 200) {
-    alert(xhr1.status + ': ' + xhr1.statusText);
-  } else {
-    console.log(xhr1.responseText);
-  }
-}
+//   if (xhr1.status != 200) {
+//     alert(xhr1.status + ': ' + xhr1.statusText);
+//   } else {
+//     console.log(xhr1.responseText);
+//   }
+// }
 
 // task 2
 let xhr2 = new XMLHttpRequest();
@@ -78,6 +78,7 @@ xhr2.onreadystatechange = function() {
         }
 
         function getSortByName(field) {
+            console.log(field);
             if (isReverse) {
                 isReverse = !isReverse;
                 return sortVisitors = [...visitors].sort(function(a, b) {
@@ -195,7 +196,7 @@ xhr2.onreadystatechange = function() {
     }
     let id = document.getElementById('id');
     let date = document.getElementById('date');
-    let name = document.getElementById('name');
+    let tableName = document.getElementById('name');
     let email = document.getElementById('email');
     let description = document.getElementById('description');
     
@@ -214,7 +215,7 @@ xhr2.onreadystatechange = function() {
         fillTable();
     })
     
-    name.addEventListener('click', function() {
+    tableName.addEventListener('click', function() {
         clearTable();
         getSortByName(name);
         fillTable();
@@ -248,7 +249,7 @@ function incPage() {
 
 function request() {
 
-    var xhr3 = new XMLHttpRequest();
+    let xhr3 = new XMLHttpRequest();
 
     xhr3.open('GET', `https://tanuhaua.github.io/datas-file-json/dynamic-loading/${page}/users.json`, true);
     
@@ -307,13 +308,15 @@ function request() {
         let button = document.querySelector('button');
         
         button.addEventListener('click', function(event) {
-            // event.stopImmediatePropagation();
+            event.stopImmediatePropagation();
+            event.stopPropagation();
             
             if (visitors.loadMore) {
-                console.log(visitors);
                 incPage();
                 request();
                 fillTable();
+                let loadMore = JSON.parse(xhr3.responseText);
+                console.log(loadMore);
             }
         })
     }

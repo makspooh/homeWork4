@@ -1,19 +1,19 @@
-// // task 1
-// let xhr1 = new XMLHttpRequest();
+// task 1
+let xhr1 = new XMLHttpRequest();
 
-// xhr1.open('GET', 'https://tanuhaua.github.io/datas-file-json/data.json', true);
+xhr1.open('GET', 'https://tanuhaua.github.io/datas-file-json/data.json', true);
 
-// xhr1.send();
+xhr1.send();
 
-// xhr1.onreadystatechange = function() {
-//   if (xhr1.readyState != 4) return;
+xhr1.onreadystatechange = function() {
+  if (xhr1.readyState != 4) return;
 
-//   if (xhr1.status != 200) {
-//     alert(xhr1.status + ': ' + xhr1.statusText);
-//   } else {
-//     console.log(xhr1.responseText);
-//   }
-// }
+  if (xhr1.status != 200) {
+    alert(xhr1.status + ': ' + xhr1.statusText);
+  } else {
+    console.log(xhr1.responseText);
+  }
+}
 
 // task 2
 let xhr2 = new XMLHttpRequest();
@@ -40,121 +40,63 @@ xhr2.onreadystatechange = function() {
         let sortVisitors;
         var isReverse = true;
 
-        function getSortById() {
-            if (isReverse) {
-                sortVisitors = [...visitors].sort((a, b) => b.id - a.id);
-                isReverse = !isReverse;
-            } else {
-                sortVisitors = [...visitors].sort((a, b) => a.id - b.id);
-                isReverse = !isReverse;
-            }
-        }
-        getSortById();
+        getSortByField('id');
         fillTable();
     
         function getSortByDate() {
-            if (isReverse) {
-                isReverse = !isReverse;
-                return sortVisitors = [...visitors].sort(function(a, b) {
-                    if (new Date(a.createdAt) > new Date(b.createdAt)) {
-                        return 1;
-                    }
-                    if (new Date(a.createdAt) < new Date(b.createdAt)) {
-                        return -1;
-                    }
-                })
-            } else {
-                isReverse = !isReverse;
-                return sortVisitors = [...visitors].sort(function(a, b) {
-                    if (new Date(a.createdAt) < new Date(b.createdAt)) {
-                        return 1;
-                    }
-                    if (new Date(a.createdAt) > new Date(b.createdAt)) {
-                        return -1;
-                    }
-                    return 0;
-                })
-            }
+            isReverse = !isReverse;
+            return sortVisitors = [...visitors].sort(function(a, b) {
+                if (new Date(a.createdAt) > new Date(b.createdAt)) {
+                    return isReverse ? -1 : 1;
+                } else {
+                    return isReverse ? 1 : -1;
+                }
+            })
+        }
+        
+        function getSortByField(field) {
+            isReverse = !isReverse;
+            return sortVisitors = [...visitors].sort(function(a, b) {
+                if (a[field] > b[field]) {
+                    return isReverse ? -1 : 1;
+                } else {
+                    return isReverse ? 1 : -1;
+                }
+            });
         }
 
-        function getSortByName(field) {
-            console.log(field);
-            if (isReverse) {
-                isReverse = !isReverse;
-                return sortVisitors = [...visitors].sort(function(a, b) {
-                    if (a[field] > b[field]) {
-                        return 1;
-                    }
-                    if (a[field] < b[field]) {
-                        return -1;
-                    }
-                })
-            } else {
-                isReverse = !isReverse;
-                return sortVisitors = [...visitors].sort(function(a, b) {
-                    if (a[field] < b[field]) {
-                        return 1;
-                    }
-                    if (a[field] > b[field]) {
-                        return -1;
-                    }
-                    return 0;
-                })
-            }
-        }
         
-        function getSortByEmail() {
-            if (isReverse) {
-                isReverse = !isReverse;
-                return sortVisitors = [...visitors].sort(function(a, b) {
-                    if (a.email > b.email) {
-                        return 1;
-                    }
-                    if (a.email < b.email) {
-                        return -1;
-                    }
-                })
-            } else {
-                isReverse = !isReverse;
-                return sortVisitors = [...visitors].sort(function(a, b) {
-                    if (a.email < b.email) {
-                        return 1;
-                    }
-                    if (a.email > b.email) {
-                        return -1;
-                    }
-                    return 0;            
-                })
-            }
-        }
-        
-        function getSortByDescription() {
-            if (isReverse) {
-                isReverse = !isReverse;
-                return sortVisitors = [...visitors].sort(function(a, b) {
-                    if (a.description > b.description) {
-                        return 1;
-                    }
-                    if (a.description < b.description) {
-                        return -1;
-                    }
-                })
-            } else {
-                isReverse = !isReverse;
-                return sortVisitors = [...visitors].sort(function(a, b) {
-                    if (a.description < b.description) {
-                        return 1;
-                    }
-                    if (a.description > b.description) {
-                        return -1;
-                    }
-                    return 0;            
-                })
-            }
-        }
-    
         function fillTable() {
             let table = document.querySelector('table');
+
+            getDate = function(index) {
+                let tableCell = document.createElement('td');
+
+                let date = new Date(sortVisitors[index].createdAt);
+                let year = date.getFullYear();
+    
+                let month = date.getMonth();
+                if (month < 10) month = '0' + month;
+    
+                let day = date.getDate();
+                if (day < 10) day = '0' + day;
+    
+                tableCell = document.createElement('td');
+                tableCell.textContent = year + '.' + month + '.' + day;
+    
+                return tableCell;
+            }
+
+            getData = function(index, field) {
+                let tableCell = document.createElement('td');
+
+                let userData = sortVisitors[index][field];
+
+                tableCell = document.createElement('td');
+                tableCell.textContent = userData;
+
+                return tableCell;
+            }
     
             for (let i = 0; i < sortVisitors.length; i++) {
                 let tableRow = document.createElement('tr');
@@ -162,41 +104,22 @@ xhr2.onreadystatechange = function() {
                 table.appendChild(tableRow);
                 
                 for (let j = 0; j < 1; j++) {
-                    let date = new Date(sortVisitors[i].createdAt);
-                    let year = date.getFullYear(4);
+                    tableRow.appendChild(getData(i, 'id'));
+
+                    tableRow.appendChild(getDate(i));
     
-                    let month = date.getMonth(5);
-                    if (month < 10) month = '0' + month;
-    
-                    let day = date.getDate(5);
-                    if (day < 10) day = '0' + day;
-    
-                    let tableCell = document.createElement('td');
-                    tableCell.textContent = sortVisitors[i].id;
-                    tableRow.appendChild(tableCell);
-    
-                    tableCell = document.createElement('td');
-                    tableCell.textContent = year + '.' + month + '.' + day;
-                    tableRow.appendChild(tableCell);
-    
-                    tableCell = document.createElement('td');
-                    tableCell.textContent = sortVisitors[i].name;
-                    tableRow.appendChild(tableCell);
-    
-                    tableCell = document.createElement('td');
-                    tableCell.textContent = sortVisitors[i].email;
-                    tableRow.appendChild(tableCell);
-    
-                    tableCell = document.createElement('td');
-                    tableCell.textContent = sortVisitors[i].description;
-                    tableRow.appendChild(tableCell);
+                    tableRow.appendChild(getData(i, 'name'));
+                    
+                    tableRow.appendChild(getData(i, 'email'));
+                    
+                    tableRow.appendChild(getData(i, 'description'));
                 }
             }
         }
     }
     let id = document.getElementById('id');
     let date = document.getElementById('date');
-    let tableName = document.getElementById('name');
+    let name = document.getElementById('name');
     let email = document.getElementById('email');
     let description = document.getElementById('description');
     
@@ -211,25 +134,25 @@ xhr2.onreadystatechange = function() {
     
     id.addEventListener('click', function() {
         clearTable();
-        getSortById();
+        getSortByField('id');
         fillTable();
     })
     
-    tableName.addEventListener('click', function() {
+    name.addEventListener('click', function() {
         clearTable();
-        getSortByName(name);
+        getSortByField('name');
         fillTable();
     })
     
     email.addEventListener('click', function() {
         clearTable();
-        getSortByEmail();
+        getSortByField('email');
         fillTable();
     })
     
     description.addEventListener('click', function() {
         clearTable();
-        getSortByDescription();
+        getSortByField('description');
         fillTable();
     })
     

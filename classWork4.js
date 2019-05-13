@@ -82,20 +82,20 @@ xhr2.onreadystatechange = function() {
             if (isReverse) {
                 isReverse = !isReverse;
                 return sortVisitors = [...visitors].sort(function(a, b) {
-                    if (a.field > b.field) {
+                    if (a[field] > b[field]) {
                         return 1;
                     }
-                    if (a.field < b.field) {
+                    if (a[field] < b[field]) {
                         return -1;
                     }
                 })
             } else {
                 isReverse = !isReverse;
                 return sortVisitors = [...visitors].sort(function(a, b) {
-                    if (a.field < b.field) {
+                    if (a[field] < b[field]) {
                         return 1;
                     }
-                    if (a.field > b.field) {
+                    if (a[field] > b[field]) {
                         return -1;
                     }
                     return 0;

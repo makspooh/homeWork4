@@ -13,7 +13,7 @@ xhr1.onreadystatechange = function() {
   } else {
     console.log(xhr1.responseText);
   }
-}
+};
 
 // task 2
 let xhr2 = new XMLHttpRequest();
@@ -29,7 +29,7 @@ xhr2.onreadystatechange = function() {
     } else {
       console.log(xhr2.responseText);
     }
-}
+};
 
 xhr2.onreadystatechange = function() {
     if (xhr2.readyState != 4) return;
@@ -81,7 +81,7 @@ xhr2.onreadystatechange = function() {
                 tableCell.textContent = year + '.' + month + '.' + day;
     
                 return tableCell;
-            }
+            };
 
             getData = function(index, field) {
                 let tableCell = document.createElement('td');
@@ -92,7 +92,7 @@ xhr2.onreadystatechange = function() {
                 tableCell.textContent = userData;
 
                 return tableCell;
-            }
+            };
     
             for (let i = 0; i < sortVisitors.length; i++) {
                 let tableRow = document.createElement('tr');
@@ -136,7 +136,7 @@ xhr2.onreadystatechange = function() {
         } else {
             targetDataset.sortOrder = '0';
         }
-    })
+    });
 
     name.addEventListener('click', function() {
         const targetDataset = event.target.dataset;
@@ -151,7 +151,7 @@ xhr2.onreadystatechange = function() {
         } else {
             targetDataset.sortOrder = '0';
         }
-    })
+    });
 
     email.addEventListener('click', function() {
         const targetDataset = event.target.dataset;
@@ -166,7 +166,7 @@ xhr2.onreadystatechange = function() {
         } else {
             targetDataset.sortOrder = '0';
         }
-    })
+    });
 
     description.addEventListener('click', function() {
         const targetDataset = event.target.dataset;
@@ -181,7 +181,7 @@ xhr2.onreadystatechange = function() {
         } else {
             targetDataset.sortOrder = '0';
         }
-    })
+    });
 
     date.addEventListener('click', function() {
         const targetDataset = event.target.dataset;
@@ -197,7 +197,7 @@ xhr2.onreadystatechange = function() {
             targetDataset.sortOrder = '0';
         }
     })
-}
+};
 
 // task 3
 function request(url) {
@@ -239,7 +239,7 @@ function request(url) {
                     tableCell.textContent = year + '.' + month + '.' + day;
             
                     return tableCell;
-                }
+                };
             
                 getData = function(index, field) {
                     let tableCell = document.createElement('td');
@@ -250,7 +250,7 @@ function request(url) {
                     tableCell.textContent = userData;
             
                     return tableCell;
-                }
+                };
             
                 for (let i = 0; i < visitors.data.length; i++) {
                     let tableRow = document.createElement('tr');
@@ -280,5 +280,5 @@ button.addEventListener('click', function() {
     page++;
     let url = `https://tanuhaua.github.io/datas-file-json/dynamic-loading/${page}/users.json`;
     request(url);
-})
+});
 request(url);

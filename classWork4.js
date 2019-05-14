@@ -38,34 +38,30 @@ xhr2.onreadystatechange = function() {
     } else {
         let visitors = JSON.parse(xhr2.responseText);
         let sortVisitors;
-        var isReverse = true;
 
         getSortByField('id');
         fillTable();
     
-        function getSortByDate() {
-            isReverse = !isReverse;
+        function getSortByDate(sortOrder) {
             return sortVisitors = [...visitors].sort(function(a, b) {
                 if (new Date(a.createdAt) > new Date(b.createdAt)) {
-                    return isReverse ? -1 : 1;
+                    return sortOrder === '1' ? -1 : 1;
                 } else {
-                    return isReverse ? 1 : -1;
+                    return sortOrder === '1' ? 1 : -1;
                 }
             })
         }
         
-        function getSortByField(field) {
-            isReverse = !isReverse;
+        function getSortByField(field, sortOrder) {
             return sortVisitors = [...visitors].sort(function(a, b) {
                 if (a[field] > b[field]) {
-                    return isReverse ? -1 : 1;
+                    return sortOrder === '1' ? -1 : 1;
                 } else {
-                    return isReverse ? 1 : -1;
+                    return sortOrder === '1' ? 1 : -1;
                 }
             });
         }
 
-        
         function fillTable() {
             let table = document.querySelector('table');
 
@@ -105,23 +101,19 @@ xhr2.onreadystatechange = function() {
                 
                 for (let j = 0; j < 1; j++) {
                     tableRow.appendChild(getData(i, 'id'));
-
                     tableRow.appendChild(getDate(i));
-    
                     tableRow.appendChild(getData(i, 'name'));
-                    
                     tableRow.appendChild(getData(i, 'email'));
-                    
                     tableRow.appendChild(getData(i, 'description'));
                 }
             }
         }
     }
-    let id = document.getElementById('id');
-    let date = document.getElementById('date');
-    let name = document.getElementById('name');
-    let email = document.getElementById('email');
-    let description = document.getElementById('description');
+    var id = document.getElementById('id');
+    var date = document.getElementById('date');
+    var name = document.getElementById('name');
+    var email = document.getElementById('email');
+    var description = document.getElementById('description');
     
     function clearTable() {
         let td = document.querySelectorAll('td');
@@ -129,53 +121,90 @@ xhr2.onreadystatechange = function() {
         for (let i = 0; i < td.length; i++) {
             td[i].remove();
         }
-    
     }
-    
+
     id.addEventListener('click', function() {
+        const targetDataset = event.target.dataset;
+        const sortOrder = targetDataset.sortOrder;
+
         clearTable();
-        getSortByField('id');
+        getSortByField('id', sortOrder);
         fillTable();
+
+        if (sortOrder === '0') {
+            targetDataset.sortOrder = '1';
+        } else {
+            targetDataset.sortOrder = '0';
+        }
     })
-    
+
     name.addEventListener('click', function() {
+        const targetDataset = event.target.dataset;
+        const sortOrder = targetDataset.sortOrder;
+
         clearTable();
-        getSortByField('name');
+        getSortByField('name', sortOrder);
         fillTable();
+
+        if (sortOrder === '0') {
+            targetDataset.sortOrder = '1';
+        } else {
+            targetDataset.sortOrder = '0';
+        }
     })
-    
+
     email.addEventListener('click', function() {
+        const targetDataset = event.target.dataset;
+        const sortOrder = targetDataset.sortOrder;
+
         clearTable();
-        getSortByField('email');
+        getSortByField('email', sortOrder);
         fillTable();
+
+        if (sortOrder === '0') {
+            targetDataset.sortOrder = '1';
+        } else {
+            targetDataset.sortOrder = '0';
+        }
     })
-    
+
     description.addEventListener('click', function() {
+        const targetDataset = event.target.dataset;
+        const sortOrder = targetDataset.sortOrder;
+
         clearTable();
-        getSortByField('description');
+        getSortByField('description', sortOrder);
         fillTable();
+
+        if (sortOrder === '0') {
+            targetDataset.sortOrder = '1';
+        } else {
+            targetDataset.sortOrder = '0';
+        }
     })
-    
+
     date.addEventListener('click', function() {
+        const targetDataset = event.target.dataset;
+        const sortOrder = targetDataset.sortOrder;
+
         clearTable();
-        getSortByDate();
+        getSortByDate(sortOrder);
         fillTable();
+
+        if (sortOrder === '0') {
+            targetDataset.sortOrder = '1';
+        } else {
+            targetDataset.sortOrder = '0';
+        }
     })
 }
 
 // task 3
-var page = 1;
-
-function incPage() {
-    page += 1;
-}
-
-function request() {
-
-    let xhr3 = new XMLHttpRequest();
-
-    xhr3.open('GET', `https://tanuhaua.github.io/datas-file-json/dynamic-loading/${page}/users.json`, true);
+function request(url) {
+    var xhr3 = new XMLHttpRequest();
     
+    xhr3.open('GET', url, true);
+
     xhr3.send();
 
     xhr3.onreadystatechange = function() {
@@ -184,64 +213,72 @@ function request() {
             console.log(xhr3.status + ': ' + xhr3.statusText);
         } else {
             var visitors = JSON.parse(xhr3.responseText);
-            
+
+            let button = document.querySelector('button');
+
+            if (!visitors.loadMore) {
+                button.remove();
+            }
+
             function fillTable() {
                 let table = document.querySelector('table');
-        
+            
+                getDate = function(index) {
+                    let tableCell = document.createElement('td');
+            
+                    let date = new Date(visitors.data[index].createdAt);
+                    let year = date.getFullYear();
+            
+                    let month = date.getMonth();
+                    if (month < 10) month = '0' + month;
+            
+                    let day = date.getDate();
+                    if (day < 10) day = '0' + day;
+            
+                    tableCell = document.createElement('td');
+                    tableCell.textContent = year + '.' + month + '.' + day;
+            
+                    return tableCell;
+                }
+            
+                getData = function(index, field) {
+                    let tableCell = document.createElement('td');
+            
+                    let userData = visitors.data[index][field];
+            
+                    tableCell = document.createElement('td');
+                    tableCell.textContent = userData;
+            
+                    return tableCell;
+                }
+            
                 for (let i = 0; i < visitors.data.length; i++) {
                     let tableRow = document.createElement('tr');
-                    
+            
                     table.appendChild(tableRow);
                     
                     for (let j = 0; j < 1; j++) {
-                        let date = new Date(visitors.data[i].createdAt);
-                        let year = date.getFullYear();
-                        
-                        let month = date.getMonth();
-                        if (month < 10) month = '0' + month;
-        
-                        let day = date.getDate();
-                        if (day < 10) day = '0' + day;
-        
-                        let tableCell = document.createElement('td');
-                        tableCell.textContent = visitors.data[i].id;
-                        tableRow.appendChild(tableCell);
-                        
-                        tableCell = document.createElement('td');
-                        tableCell.textContent = year + '.' + month + '.' + day;
-                        tableRow.appendChild(tableCell);
-        
-                        tableCell = document.createElement('td');
-                        tableCell.textContent = visitors.data[i].name;
-                        tableRow.appendChild(tableCell);
-        
-                        tableCell = document.createElement('td');
-                        tableCell.textContent = visitors.data[i].email;
-                        tableRow.appendChild(tableCell);
-                        
-                        tableCell = document.createElement('td');
-                        tableCell.textContent = visitors.data[i].description;
-                        tableRow.appendChild(tableCell);
+                        tableRow.appendChild(getData(i, 'id'));
+                        tableRow.appendChild(getDate(i));
+                        tableRow.appendChild(getData(i, 'name'));
+                        tableRow.appendChild(getData(i, 'email'));
+                        tableRow.appendChild(getData(i, 'description'));
                     }
                 }
             }
+            fillTable();
         }
-        fillTable();
-        
-        let button = document.querySelector('button');
-        
-        button.addEventListener('click', function(event) {
-            event.stopImmediatePropagation();
-            event.stopPropagation();
-            
-            if (visitors.loadMore) {
-                incPage();
-                request();
-                fillTable();
-                let loadMore = JSON.parse(xhr3.responseText);
-                console.log(loadMore);
-            }
-        })
     }
 }
-request();
+
+
+let page = 1;
+let url = `https://tanuhaua.github.io/datas-file-json/dynamic-loading/${page}/users.json`;
+let button = document.querySelector('button');
+
+button.addEventListener('click', function() {
+    page++;
+    let url = `https://tanuhaua.github.io/datas-file-json/dynamic-loading/${page}/users.json`;
+    request(url);
+})
+request(url);
